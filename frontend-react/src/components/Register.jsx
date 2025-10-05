@@ -1,18 +1,25 @@
 import React, {useState} from 'react'
+import axios from 'axios'
 
 const Register = () => {
     const [username, SetUsername] = useState('')
     const [email, SetEmail] = useState('')
     const [password, SetPassword] = useState('')
 
-    const handleRegistration = (e) =>{
+    const handleRegistration = async (e) =>{
         e.preventDefault()
 
         const userData = {
             username, email, password
         }
 
-        console.log(userData)
+        try {
+            const response = await axios.post('http://127.0.0.1:8000/api/v1/register/', userData)
+            console.log('Response Data ==>', response)
+            console.log('Registration Successful')
+        } catch (error) {
+            console.error('Registration Error: ', error.response.data)
+        }
     }
 
     return (
