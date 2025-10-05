@@ -5,6 +5,7 @@ import Main from './components/Main'
 import Footer from './components/Footer'
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Register from './components/Register'
+import Login from './components/Login'
 
 function App() {
 
@@ -18,6 +19,9 @@ function App() {
 					} />
 					<Route path='/register' element={
 						<Register />
+					} />
+					<Route path='/login' element={
+						<Login />
 					} />
 				</Routes>
 				<Footer />
