@@ -6,6 +6,7 @@ const Register = () => {
     const [email, SetEmail] = useState('')
     const [password, SetPassword] = useState('')
     const [errors, SetErrors] = useState({})
+    const [success, SetSuccess] = useState(false)
 
     const handleRegistration = async (e) =>{
         e.preventDefault()
@@ -18,6 +19,8 @@ const Register = () => {
             const response = await axios.post('http://127.0.0.1:8000/api/v1/register/', userData)
             console.log('Response Data ==>', response)
             console.log('Registration Successful')
+            SetErrors({})
+            SetSuccess(true)
         } catch (error) {
             SetErrors(error.response.data)
             console.error('Registration Error: ', error.response.data)
@@ -47,7 +50,7 @@ const Register = () => {
                                     </div>
                                 }
                             </div>
-                            <div className="mb-4">
+                            <div className="mb-3">
                                 <input type="password" className="form-control" placeholder='Set password' value={password} onChange={(e) => SetPassword(e.target.value)}/>
                                 { errors.password &&
                                     <div class="text-warning mt-1">
@@ -55,7 +58,11 @@ const Register = () => {
                                     </div>
                                 }
                             </div>
-                            <button type='submit' className="btn btn-info d-block mx-auto">Register</button>
+                            {
+                                success &&
+                                <div className="alert alert-success">Registration Successfull</div>
+                            }
+                            <button type='submit' className="btn btn-info d-block mx-auto mt-1">Register</button>
                         </form>
                     </div>
                 </div>
