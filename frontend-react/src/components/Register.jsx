@@ -1,5 +1,7 @@
 import React, {useState} from 'react'
 import axios from 'axios'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 const Register = () => {
     const [username, SetUsername] = useState('')
@@ -7,23 +9,28 @@ const Register = () => {
     const [password, SetPassword] = useState('')
     const [errors, SetErrors] = useState({})
     const [success, SetSuccess] = useState(false)
+    const [loading, SetLoading] = useState(false)
 
     const handleRegistration = async (e) =>{
         e.preventDefault()
+        SetLoading(true)
 
         const userData = {
             username, email, password
         }
 
         try {
+            SetSuccess(false)
+            SetErrors({})
             const response = await axios.post('http://127.0.0.1:8000/api/v1/register/', userData)
             console.log('Response Data ==>', response)
             console.log('Registration Successful')
-            SetErrors({})
             SetSuccess(true)
         } catch (error) {
             SetErrors(error.response.data)
             console.error('Registration Error: ', error.response.data)
+        }finally{
+            SetLoading(false)
         }
     }
 
@@ -62,7 +69,13 @@ const Register = () => {
                                 success &&
                                 <div className="alert alert-success">Registration Successfull</div>
                             }
-                            <button type='submit' className="btn btn-info d-block mx-auto mt-1">Register</button>
+                            {
+                                loading ? (
+                                    <button type='submit' className="btn btn-info d-block mx-auto mt-1" disabled><FontAwesomeIcon icon={faSpinner} spin /> Please Wait...</button>
+                                ) : (
+                                    <button type='submit' className="btn btn-info d-block mx-auto mt-1">Register</button>
+                                )
+                            }
                         </form>
                     </div>
                 </div>
