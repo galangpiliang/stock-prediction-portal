@@ -52,7 +52,7 @@ const Register = () => {
                             <div className="mb-3">
                                <input type="email" className="form-control" placeholder='Enter email address' value={email} onChange={(e) => SetEmail(e.target.value)}/>
                                 { errors.email &&
-                                    <div class="text-warning mt-1">
+                                    <div className="text-warning mt-1">
                                         {errors.email}
                                     </div>
                                 }
@@ -60,7 +60,7 @@ const Register = () => {
                             <div className="mb-3">
                                 <input type="password" className="form-control" placeholder='Set password' value={password} onChange={(e) => SetPassword(e.target.value)}/>
                                 { errors.password &&
-                                    <div class="text-warning mt-1">
+                                    <div className="text-warning mt-1">
                                         {errors.password}
                                     </div>
                                 }
