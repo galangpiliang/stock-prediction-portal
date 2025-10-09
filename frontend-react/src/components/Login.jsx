@@ -1,16 +1,17 @@
-import React, {useState} from 'react'
+import React, {useContext, useState} from 'react'
 import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { useNavigate } from 'react-router-dom'
+import { AuthContext } from '../AuthProvider'
 
 const Login = () => {
     const [username, SetUsername] = useState('')
     const [password, SetPassword] = useState('')
     const [error, SetError] = useState('')
-    const [success, SetSuccess] = useState(false)
     const [loading, SetLoading] = useState(false)
     const navigate = useNavigate()
+    const {isLoggedIn, setIsLoggedIn} = useContext(AuthContext)
 
     const handleLogin = async (e) =>{
         e.preventDefault()
@@ -21,13 +22,12 @@ const Login = () => {
         }
 
         try {
-            SetSuccess(false)
             SetError('')
             const response = await axios.post('http://127.0.0.1:8000/api/v1/token/', userData)
             localStorage.setItem('accessToken', response.data.access)
             localStorage.setItem('refreshToken', response.data.refresh)
             console.log('Login successful')
-            SetSuccess(true)
+            setIsLoggedIn(true)
             navigate('/')
         } catch (error) {
             console.error('Invalid Credentials')
