@@ -8,6 +8,7 @@ import Register from './components/Register'
 import Login from './components/Login'
 import AuthProvider from './AuthProvider'
 import Dashboard from './components/dashboard/Dashboard'
+import PrivateRoute from './PrivateRoute'
 
 function App() {
 
@@ -27,7 +28,9 @@ function App() {
 							<Login />
 						} />
 						<Route path='/dashboard' element={
-							<Dashboard />
+							<PrivateRoute>
+								<Dashboard />
+							</PrivateRoute>
 						} />
 					</Routes>
 					<Footer />
