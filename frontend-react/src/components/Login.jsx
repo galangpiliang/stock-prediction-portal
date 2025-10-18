@@ -2,7 +2,6 @@ import React, {useContext, useState} from 'react'
 import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
-import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../AuthProvider'
 
 const Login = () => {
@@ -10,7 +9,6 @@ const Login = () => {
     const [password, SetPassword] = useState('')
     const [error, SetError] = useState('')
     const [loading, SetLoading] = useState(false)
-    const navigate = useNavigate()
     const {isLoggedIn, setIsLoggedIn} = useContext(AuthContext)
 
     const handleLogin = async (e) =>{
@@ -28,7 +26,6 @@ const Login = () => {
             localStorage.setItem('refreshToken', response.data.refresh)
             console.log('Login successful')
             setIsLoggedIn(true)
-            navigate('/')
         } catch (error) {
             console.error('Invalid Credentials')
             SetError('Invalid Credentials')
