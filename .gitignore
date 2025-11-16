@@ -187,3 +187,8 @@ thumb
 sketch
 
 # End of https://www.toptal.com/developers/gitignore/api/django,react
+
+# JupyterLab workspace/user UI state (do not commit local workspace files)
+Resources/.jupyter/
+*.jupyterlab-workspace
+*.jupyterlab-workspace*
