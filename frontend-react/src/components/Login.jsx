@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react'
-import axios from 'axios'
+import axiosInstance from '../axiosInstance'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { AuthContext } from '../AuthProvider'
@@ -21,7 +21,7 @@ const Login = () => {
 
         try {
             SetError('')
-            const response = await axios.post('http://127.0.0.1:8000/api/v1/token/', userData)
+            const response = await axiosInstance.post('/token/', userData)
             localStorage.setItem('accessToken', response.data.access)
             localStorage.setItem('refreshToken', response.data.refresh)
             console.log('Login successful')
