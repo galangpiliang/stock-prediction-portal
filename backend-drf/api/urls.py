@@ -13,5 +13,5 @@ urlpatterns = [
     path('protected-view/', UserViews.ProtectedView.as_view()),
 
     # Prediction API endpoint
-    path('predict/', UserViews.StockPredictionAPIView.as_view(), name='stock_prediction'),
+    path('predict/', StockPredictionAPIView.as_view(), name='stock_prediction'),
 ]
