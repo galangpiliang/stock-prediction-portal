@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 import os
 from django.conf import settings
+from .utils import save_plot
 
 class StockPredictionAPIView(APIView):
     def post(self, request):
@@ -37,15 +38,27 @@ class StockPredictionAPIView(APIView):
             plt.ylabel('Price (USD)')
             plt.legend()
             plt.show()
-
             # Save plot to a file
             plot_filename = f'{ticker.upper()}_plot.png'
-            image_path = os.path.join(settings.MEDIA_ROOT, plot_filename)
-            plt.savefig(image_path)
-            plt.close()
-            plot_img = f"{settings.MEDIA_URL}{plot_filename}"
+            plot_img = save_plot(plot_filename)
+
+            # 100 days moving average
+            ma100 = df['Close'].rolling(100).mean()
+            plt.switch_backend('Agg')  # Use a non-interactive backend
+            plt.figure(figsize=(14,7))
+            plt.plot(df['Date'], df['Close'], label='Close Price')
+            plt.plot(df['Date'], ma100, 'r', label='100-Day Moving Average')
+            plt.title(F'{ticker.upper()} Stock Price Over Time')
+            plt.xlabel('Date')
+            plt.ylabel('Price (USD)')
+            plt.legend()
+            plt.show()
+            # Save plot to a file
+            plot_filename_100_dma = f'{ticker.upper()}_100_dma.png'
+            plot_100_dma = save_plot(plot_filename_100_dma)
 
             return Response({   
                 "ticker": ticker.upper(),
                 "plot_image": plot_img,
+                "plot_100_dma": plot_100_dma,
             }, status=status.HTTP_200_OK)

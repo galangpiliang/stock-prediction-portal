@@ -9,6 +9,7 @@ const Dashboard = () => {
 	const [success, setSuccess] = useState(null)
 	const [loading, SetLoading] = useState(false)
 	const [plot, setPlot] = useState(null)
+	const [ma100Plot, setMa100Plot] = useState(null)
 
 	useEffect(() => {
 		const fetchProtectedData = async () => {
@@ -37,6 +38,8 @@ const Dashboard = () => {
 			// Set the plot URL from the response
 			const backendRoot = import.meta.env.VITE_BACKEND_ROOT
 			const plotUrl = backendRoot + response.data.plot_image 
+			const ma100PlotUrl = backendRoot + response.data.plot_100_dma
+			setMa100Plot(ma100PlotUrl)
 			setPlot(plotUrl)
 			console.log(plotUrl)
 		} catch (error) {
@@ -78,6 +81,9 @@ const Dashboard = () => {
 					<div className="mt-4">
 						<div className="p-5">
 							<img src={plot} alt={`Stock plot for ${stockTicker.toUpperCase()}`} className="img-fluid" />
+						</div>
+						<div className="p-5">
+							<img src={ma100Plot} alt={`100-day moving average plot for ${stockTicker.toUpperCase()}`} className="img-fluid" />
 						</div>
 					</div>
 				)}
