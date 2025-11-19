@@ -43,7 +43,9 @@ class StockPredictionAPIView(APIView):
             image_path = os.path.join(settings.MEDIA_ROOT, plot_filename)
             plt.savefig(image_path)
             plt.close()
-            img_url = f"{settings.MEDIA_URL}{plot_filename}"
+            plot_img = f"{settings.MEDIA_URL}{plot_filename}"
 
-            return Response({"message": f"Received ticker: {ticker}", "plot_url": img_url}, status=status.HTTP_200_OK)
-        
+            return Response({   
+                "ticker": ticker.upper(),
+                "plot_image": plot_img,
+            }, status=status.HTTP_200_OK)

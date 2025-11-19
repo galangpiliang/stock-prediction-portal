@@ -8,6 +8,7 @@ const Dashboard = () => {
 	const [error, setError] = useState(null)
 	const [success, setSuccess] = useState(null)
 	const [loading, SetLoading] = useState(false)
+	const [plot, setPlot] = useState(null)
 
 	useEffect(() => {
 		const fetchProtectedData = async () => {
@@ -32,6 +33,12 @@ const Dashboard = () => {
 			const response = await axiosInstance.post('/predict/', { ticker: stockTicker })
 			console.log('Prediction response:', response.data)
 			setSuccess(`Success get the data for ticker ${stockTicker.toUpperCase()}`)
+
+			// Set the plot URL from the response
+			const backendRoot = import.meta.env.VITE_BACKEND_ROOT
+			const plotUrl = backendRoot + response.data.plot_image 
+			setPlot(plotUrl)
+			console.log(plotUrl)
 		} catch (error) {
 			console.error('Error fetching prediction:', error)
 			
@@ -66,6 +73,14 @@ const Dashboard = () => {
 							</button>
 					</form>
 				</div>
+				{/* Display the plot image if available */}
+				{plot && (
+					<div className="mt-4">
+						<div className="p-5">
+							<img src={plot} alt={`Stock plot for ${stockTicker.toUpperCase()}`} className="img-fluid" />
+						</div>
+					</div>
+				)}
 			</div>
 		</div>
 	)
