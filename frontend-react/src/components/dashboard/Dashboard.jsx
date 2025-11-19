@@ -1,8 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axiosInstance from '../../axiosInstance'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 const Dashboard = () => {
 	const [stockTicker, setStockTicker] = useState('')
+	const [error, setError] = useState(null)
+	const [success, setSuccess] = useState(null)
+	const [loading, SetLoading] = useState(false)
 
 	useEffect(() => {
 		const fetchProtectedData = async () => {
@@ -19,13 +24,25 @@ const Dashboard = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault()
+		setError(null)
+		setSuccess(null)
+		SetLoading(true)
 
 		try {
 			const response = await axiosInstance.post('/predict/', { ticker: stockTicker })
 			console.log('Prediction response:', response.data)
+			setSuccess(`Success get the data for ticker ${stockTicker.toUpperCase()}`)
 		} catch (error) {
 			console.error('Error fetching prediction:', error)
-		}
+			
+			const message =
+			error.response?.data?.error ||      // backend error message
+			error.message ||                    // axios/network error
+			"An unexpected error occurred";     // fallback
+			setError(message)
+		}finally{
+            SetLoading(false)
+        }
 	}
 
 	return (
@@ -33,8 +50,20 @@ const Dashboard = () => {
 			<div className="row">
 				<div className="col-md-6 mx-auto">
 					<form onSubmit={handleSubmit}>
-						<input type="text" className='form-control' placeholder='Enter Stock Ticker' onChange={(e) => setStockTicker(e.target.value)} required />
-						<button type="submit" className='btn btn-info mt-3'>See Prediction</button>
+						<input type="text" className='form-control mb-2' placeholder='Enter Stock Ticker' onChange={(e) => setStockTicker(e.target.value)} required />
+						<small>
+							{error && <div className="text-danger">{error}</div>}
+							{success && <div className="text-info">{success}</div>}
+						</small>
+							<button type='submit' className="btn btn-info mt-3">
+								{
+									loading ? (
+										<span><FontAwesomeIcon icon={faSpinner} spin /> Getting Prediction...</span>
+									) : (
+										"See Prediction"
+									)
+								}
+							</button>
 					</form>
 				</div>
 			</div>
