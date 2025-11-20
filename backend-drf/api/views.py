@@ -11,6 +11,8 @@ from datetime import datetime
 import os
 from django.conf import settings
 from .utils import save_plot
+from sklearn.preprocessing import MinMaxScaler
+from keras.models import load_model
 
 class StockPredictionAPIView(APIView):
     def post(self, request):
@@ -72,6 +74,42 @@ class StockPredictionAPIView(APIView):
             # Save plot to a file
             plot_filename_200_dma = f'{ticker.upper()}_200_dma.png'
             plot_200_dma = save_plot(plot_filename_200_dma)
+
+            # Splitting data into training and testing sets
+            data_training = pd.DataFrame(df['Close'][0:int(len(df)*0.70)])
+            data_testing = pd.DataFrame(df['Close'][int(len(df)*0.70): int(len(df))])  
+
+            # Sclaing down the data between 0 and 1
+            scaler = MinMaxScaler(feature_range=(0,1))
+            data_training_array = scaler.fit_transform(data_training)
+
+            # Load the pre-trained model
+            model = load_model('stock_prediction_model.keras')
+
+            # Preparing testing data
+            past_100_days = data_training.tail(100)
+            final_df = pd.concat([past_100_days, data_testing], ignore_index=True)
+            input_data = scaler.transform(final_df)
+            
+            x_test = []
+            y_test = []
+            for i in range(100, input_data.shape[0]):
+                x_test.append(input_data[i-100:i])
+                y_test.append(input_data[i, 0])
+            x_test, y_test = np.array(x_test), np.array(y_test)
+
+            # Making predictions
+            y_predicted = model.predict(x_test)
+            
+            # Revert the scaled prices back to original price
+            y_predicted = scaler.inverse_transform(y_predicted.reshape(-1, 1)).flatten()
+            y_test = scaler.inverse_transform(y_test.reshape(-1, 1)).flatten()
+
+            print("Y Test:", y_test)
+            print("Y Predicted:", y_predicted)
+
+            # Plot the final prediction
+
 
             return Response({   
                 "ticker": ticker.upper(),
