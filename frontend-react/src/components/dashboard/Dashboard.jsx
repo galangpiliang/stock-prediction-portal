@@ -12,6 +12,9 @@ const Dashboard = () => {
 	const [ma100Plot, setMa100Plot] = useState(null)
 	const [ma200Plot, setMa200Plot] = useState(null)
 	const [predVsOrigPlot, setPredVsOrigPlot] = useState(null)
+	const [mse, setMse] = useState(null)
+	const [rmse, setRmse] = useState(null)
+	const [r2, setR2] = useState(null)
 
 	useEffect(() => {
 		const fetchProtectedData = async () => {
@@ -47,6 +50,9 @@ const Dashboard = () => {
 			setMa100Plot(ma100PlotUrl)
 			setMa200Plot(ma200PlotUrl)
 			setPredVsOrigPlot(predVsOrigPlotUrl)
+			setMse(response.data.mse)
+			setRmse(response.data.rmse)
+			setR2(response.data.r2)
 		} catch (error) {
 			console.error('Error fetching prediction:', error)
 			
@@ -95,6 +101,12 @@ const Dashboard = () => {
 						</div>
 						<div className="p-5">
 							<img src={predVsOrigPlot} alt={`Prediction vs Original plot for ${stockTicker.toUpperCase()}`} className="img-fluid" />
+						</div>
+						<div className="text-light p-3">
+							<h4>Model Evaluation</h4>
+							<p>Mean Square Error (MSE): {mse}</p>
+							<p>Root Mean Square Error (RMSE): {rmse}</p>
+							<p>R-squared (R2) Score: {r2}</p>
 						</div>
 					</div>
 				)}
