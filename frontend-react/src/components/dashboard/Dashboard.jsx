@@ -10,6 +10,7 @@ const Dashboard = () => {
 	const [loading, SetLoading] = useState(false)
 	const [plot, setPlot] = useState(null)
 	const [ma100Plot, setMa100Plot] = useState(null)
+	const [ma200Plot, setMa200Plot] = useState(null)
 
 	useEffect(() => {
 		const fetchProtectedData = async () => {
@@ -39,9 +40,10 @@ const Dashboard = () => {
 			const backendRoot = import.meta.env.VITE_BACKEND_ROOT
 			const plotUrl = backendRoot + response.data.plot_image 
 			const ma100PlotUrl = backendRoot + response.data.plot_100_dma
-			setMa100Plot(ma100PlotUrl)
+			const ma200PlotUrl = backendRoot + response.data.plot_200_dma
 			setPlot(plotUrl)
-			console.log(plotUrl)
+			setMa100Plot(ma100PlotUrl)
+			setMa200Plot(ma200PlotUrl)
 		} catch (error) {
 			console.error('Error fetching prediction:', error)
 			
@@ -84,6 +86,9 @@ const Dashboard = () => {
 						</div>
 						<div className="p-5">
 							<img src={ma100Plot} alt={`100-day moving average plot for ${stockTicker.toUpperCase()}`} className="img-fluid" />
+						</div>
+						<div className="p-5">
+							<img src={ma200Plot} alt={`200-day moving average plot for ${stockTicker.toUpperCase()}`} className="img-fluid" />
 						</div>
 					</div>
 				)}

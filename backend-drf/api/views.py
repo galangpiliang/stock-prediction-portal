@@ -48,7 +48,7 @@ class StockPredictionAPIView(APIView):
             plt.figure(figsize=(14,7))
             plt.plot(df['Date'], df['Close'], label='Close Price')
             plt.plot(df['Date'], ma100, 'r', label='100-Day Moving Average')
-            plt.title(F'{ticker.upper()} Stock Price Over Time')
+            plt.title(F'100-Day Moving Average {ticker.upper()} Stock Price Over Time')
             plt.xlabel('Date')
             plt.ylabel('Price (USD)')
             plt.legend()
@@ -57,8 +57,25 @@ class StockPredictionAPIView(APIView):
             plot_filename_100_dma = f'{ticker.upper()}_100_dma.png'
             plot_100_dma = save_plot(plot_filename_100_dma)
 
+            # 200 days moving average
+            ma200 = df['Close'].rolling(200).mean()
+            plt.switch_backend('Agg')  # Use a non-interactive backend
+            plt.figure(figsize=(14,7))
+            plt.plot(df['Date'], df['Close'], label='Close Price')
+            plt.plot(df['Date'], ma100, 'r', label='100-Day Moving Average')
+            plt.plot(df['Date'], ma200, 'g', label='200-Day Moving Average')
+            plt.title(F'200-Day Moving Average {ticker.upper()} Stock Price Over Time')
+            plt.xlabel('Date')
+            plt.ylabel('Price (USD)')
+            plt.legend()
+            plt.show()
+            # Save plot to a file
+            plot_filename_200_dma = f'{ticker.upper()}_200_dma.png'
+            plot_200_dma = save_plot(plot_filename_200_dma)
+
             return Response({   
                 "ticker": ticker.upper(),
                 "plot_image": plot_img,
                 "plot_100_dma": plot_100_dma,
+                "plot_200_dma": plot_200_dma,
             }, status=status.HTTP_200_OK)
