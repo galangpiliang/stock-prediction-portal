@@ -2,6 +2,11 @@ import axios from "axios";
 
 const baseURL = import.meta.env.VITE_BACKEND_BASE_API;
 
+if (!baseURL) {
+  	console.error("Missing backend API URL. Please configure your environment.");
+	alert("Configuration error: API URL missing.");
+}
+
 const axiosInstance = axios.create({
 	baseURL,
 	headers: { "Content-Type": "application/json" },
