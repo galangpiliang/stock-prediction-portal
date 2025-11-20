@@ -11,6 +11,7 @@ const Dashboard = () => {
 	const [plot, setPlot] = useState(null)
 	const [ma100Plot, setMa100Plot] = useState(null)
 	const [ma200Plot, setMa200Plot] = useState(null)
+	const [predVsOrigPlot, setPredVsOrigPlot] = useState(null)
 
 	useEffect(() => {
 		const fetchProtectedData = async () => {
@@ -41,9 +42,11 @@ const Dashboard = () => {
 			const plotUrl = backendRoot + response.data.plot_image 
 			const ma100PlotUrl = backendRoot + response.data.plot_100_dma
 			const ma200PlotUrl = backendRoot + response.data.plot_200_dma
+			const predVsOrigPlotUrl = backendRoot + response.data.plot_pred_vs_orig
 			setPlot(plotUrl)
 			setMa100Plot(ma100PlotUrl)
 			setMa200Plot(ma200PlotUrl)
+			setPredVsOrigPlot(predVsOrigPlotUrl)
 		} catch (error) {
 			console.error('Error fetching prediction:', error)
 			
@@ -89,6 +92,9 @@ const Dashboard = () => {
 						</div>
 						<div className="p-5">
 							<img src={ma200Plot} alt={`200-day moving average plot for ${stockTicker.toUpperCase()}`} className="img-fluid" />
+						</div>
+						<div className="p-5">
+							<img src={predVsOrigPlot} alt={`Prediction vs Original plot for ${stockTicker.toUpperCase()}`} className="img-fluid" />
 						</div>
 					</div>
 				)}

@@ -34,10 +34,11 @@ class StockPredictionAPIView(APIView):
             # Generate Basic Plot
             plt.switch_backend('Agg')  # Use a non-interactive backend
             plt.figure(figsize=(14,7))
-            plt.plot(df['Date'], df['Close'], label='Close Price')
-            plt.title(F'{ticker.upper()} Stock Price Over Time')
-            plt.xlabel('Date')
-            plt.ylabel('Price (USD)')
+            plt.plot(df['Close'], label='Close Price')
+            plt.title(F'{ticker.upper()} Stock Price Over the Last 10 Years (Trading Days)')
+            plt.xlabel('Days')
+            plt.ylabel('Price (USD)')        
+            plt.xticks(list(range(0, len(df), 200)) + [len(df)-1])
             plt.legend()
             plt.show()
             # Save plot to a file
@@ -48,11 +49,12 @@ class StockPredictionAPIView(APIView):
             ma100 = df['Close'].rolling(100).mean()
             plt.switch_backend('Agg')  # Use a non-interactive backend
             plt.figure(figsize=(14,7))
-            plt.plot(df['Date'], df['Close'], label='Close Price')
-            plt.plot(df['Date'], ma100, 'r', label='100-Day Moving Average')
-            plt.title(F'100-Day Moving Average {ticker.upper()} Stock Price Over Time')
-            plt.xlabel('Date')
+            plt.plot(df['Close'], label='Close Price')
+            plt.plot(ma100, 'r', label='100-Day Moving Average')
+            plt.title(F'100-Day Moving Average {ticker.upper()} Stock Price Over the Last 10 Years (Trading Days)')
+            plt.xlabel('Days')
             plt.ylabel('Price (USD)')
+            plt.xticks(list(range(0, len(df), 200)) + [len(df)-1])
             plt.legend()
             plt.show()
             # Save plot to a file
@@ -63,12 +65,13 @@ class StockPredictionAPIView(APIView):
             ma200 = df['Close'].rolling(200).mean()
             plt.switch_backend('Agg')  # Use a non-interactive backend
             plt.figure(figsize=(14,7))
-            plt.plot(df['Date'], df['Close'], label='Close Price')
-            plt.plot(df['Date'], ma100, 'r', label='100-Day Moving Average')
-            plt.plot(df['Date'], ma200, 'g', label='200-Day Moving Average')
-            plt.title(F'200-Day Moving Average {ticker.upper()} Stock Price Over Time')
-            plt.xlabel('Date')
+            plt.plot(df['Close'], label='Close Price')
+            plt.plot(ma100, 'r', label='100-Day Moving Average')
+            plt.plot(ma200, 'g', label='200-Day Moving Average')
+            plt.title(F'200-Day Moving Average {ticker.upper()} Stock Price Over the Last 10 Years (Trading Days)')
+            plt.xlabel('Days')
             plt.ylabel('Price (USD)')
+            plt.xticks(list(range(0, len(df), 200)) + [len(df)-1])
             plt.legend()
             plt.show()
             # Save plot to a file
@@ -109,11 +112,30 @@ class StockPredictionAPIView(APIView):
             print("Y Predicted:", y_predicted)
 
             # Plot the final prediction
+            plt.switch_backend('Agg')  # Use a non-interactive backend
+            plt.figure(figsize=(14,7))
+            plt.plot(y_test, 'b', label='Original Close Price')
+            plt.plot(y_predicted, 'r', label='Predicted Close Price')
+            plt.title(F'Predicted vs Original {ticker.upper()} Stock Price Prediction – Test Set Performance (Last 30% of Data)')
+            plt.xlabel('Days')
+            plt.ylabel('Price (USD)')
 
+            train_len = int(len(df) * 0.70)
+            start_index = train_len
+            ticks_pos = list(range(0, len(y_test), 100)) + [len(y_test)-1]
+            ticks_labels = [str(start_index + t) for t in ticks_pos]
+            plt.xticks(ticks_pos, ticks_labels)
+
+            plt.legend()
+            plt.show()
+            # Save plot to a file
+            plot_filename_pred_vs_orig = f'{ticker.upper()}_pred_vs_orig.png'
+            plot_pred_vs_orig = save_plot(plot_filename_pred_vs_orig)
 
             return Response({   
                 "ticker": ticker.upper(),
                 "plot_image": plot_img,
                 "plot_100_dma": plot_100_dma,
                 "plot_200_dma": plot_200_dma,
+                "plot_pred_vs_orig": plot_pred_vs_orig,
             }, status=status.HTTP_200_OK)
