@@ -26,4 +26,6 @@ python manage.py collectstatic --noinput --clear
 echo "Running migrations..."
 python manage.py migrate
 
-echo "Build complete!"
+# Run Django development server
+echo "Starting Django server..."
+python manage.py runserver 0.0.0.0:8000
