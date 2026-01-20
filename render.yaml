@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: stock-prediction-api
+    runtime: python
+    buildCommand: bash build.sh
+    startCommand: cd backend-drf && gunicorn stock_prediction_main.wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.11
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: false
+      - key: ALLOWED_HOSTS
+        value: '*'
+    autoDeploy: true
+
+databases:
+  - name: stock-db
+    databaseName: stock_prediction_db
+    user: stock_user
