@@ -76,15 +76,21 @@ const Dashboard = () => {
 							{error && <div className="text-danger">{error}</div>}
 							{success && <div className="text-info">{success}</div>}
 						</small>
-							<button type='submit' className="btn btn-info mt-3">
-								{
-									loading ? (
-										<span><FontAwesomeIcon icon={faSpinner} spin /> Getting Prediction...</span>
-									) : (
-										"See Prediction"
-									)
-								}
-							</button>
+						<button type='submit' className="btn btn-info mt-3">
+							{
+								loading ? (
+									<span><FontAwesomeIcon icon={faSpinner} spin /> Getting Prediction...</span>
+								) : (
+									"See Prediction"
+								)
+							}
+						</button>
+						{loading && (
+							<div className="mt-2 text-warning">
+								This website runs on free hosting with limited resources.
+								Stock prediction may take up to 2 minutes. Thank you for your patience!
+							</div>
+						)}
 					</form>
 				</div>
 				{/* Display the plot image if available */}

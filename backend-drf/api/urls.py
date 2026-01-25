@@ -11,6 +11,7 @@ urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('protected-view/', UserViews.ProtectedView.as_view()),
+    path('demo-login/', UserViews.demo_login, name='demo_login'),
 
     # Prediction API endpoint
     path('predict/', StockPredictionAPIView.as_view(), name='stock_prediction'),

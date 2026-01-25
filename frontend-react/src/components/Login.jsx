@@ -5,33 +5,38 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { AuthContext } from '../AuthProvider'
 
 const Login = () => {
+    const [demoLoading, SetDemoLoading] = useState(false)
     const [username, SetUsername] = useState('')
     const [password, SetPassword] = useState('')
     const [error, SetError] = useState('')
     const [loading, SetLoading] = useState(false)
     const {isLoggedIn, setIsLoggedIn} = useContext(AuthContext)
 
-    const handleLogin = async (e) =>{
-        e.preventDefault()
-        SetLoading(true)
-
-        const userData = {
-            username, password
-        }
-
+    const performLogin = async (endpoint, data, loaderFunc) => {
         try {
             SetError('')
-            const response = await axiosInstance.post('/token/', userData)
+            const response = await axiosInstance.post(endpoint, data)
             localStorage.setItem('accessToken', response.data.access)
             localStorage.setItem('refreshToken', response.data.refresh)
-            console.log('Login successful')
             setIsLoggedIn(true)
         } catch (error) {
-            console.error('Invalid Credentials')
-            SetError('Invalid Credentials')
-        }finally{
-            SetLoading(false)
+            SetError('Login failed. Please try again.')
+        } finally {
+            loaderFunc(false)
         }
+    }
+
+    const handleLogin = async (e) => {
+        e.preventDefault()
+        SetLoading(true)
+        // Calls standard JWT endpoint with credentials
+        await performLogin('/token/', { username, password }, SetLoading)
+    }
+
+    const handleDemoLogin = async () => {
+        SetDemoLoading(true)
+        // Calls custom endpoint with NO credentials (handled by backend)
+        await performLogin('/demo-login/', {}, SetDemoLoading)
     }
 
     return (
@@ -60,6 +65,14 @@ const Login = () => {
                                     <button type='submit' className="btn btn-info d-block mx-auto mt-1">Login</button>
                                 )
                             }
+                            <button 
+                                type="button" 
+                                className="btn btn-outline-info d-block mx-auto mt-2" 
+                                onClick={handleDemoLogin}
+                                disabled={demoLoading || loading}
+                            >
+                                {demoLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : "Try Demo Account"}
+                            </button>
                         </form>
                     </div>
                 </div>

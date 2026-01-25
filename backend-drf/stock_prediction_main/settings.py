@@ -33,6 +33,9 @@ ALLOWED_HOSTS = config(
     default="127.0.0.1,localhost,0.0.0.0"
 ).split(',')
 
+print(f"DEBUG IS: {DEBUG}")
+print(f"ALLOWED_HOSTS IS: {ALLOWED_HOSTS}")
+
 # Application definition
 
 INSTALLED_APPS = [

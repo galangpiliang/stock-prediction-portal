@@ -10,7 +10,7 @@ const envBaseURL = import.meta.env.VITE_BACKEND_BASE_API || "/api/v1";
 // 3. Safety Check: Ensure we don't have a double slash if the user adds one
 const baseURL = envBaseURL.endsWith('/') ? envBaseURL.slice(0, -1) : envBaseURL;
 
-if (baseURL) {
+if (!baseURL) {
   	console.error("Missing backend API URL. Please configure your environment.");
 	alert("Configuration error: API URL missing.");
 }
