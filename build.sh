@@ -27,13 +27,3 @@ python manage.py collectstatic --noinput --clear
 echo "Running migrations..."
 python manage.py migrate
 echo "Build process completed successfully."
-
-# Set the variable locally
-export VITE_BACKEND_BASE_API="https://test-link.com"
-
-# Build only the frontend
-cd frontend-react
-npm run build
-
-# Search the build files for that link
-grep -r "https://test-link.com" dist/
