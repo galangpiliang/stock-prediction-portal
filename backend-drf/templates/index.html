@@ -1,0 +1,15 @@
+{% load django_vite %}
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stock Prediction Portal</title>
+
+  {% vite_hmr_client %}
+  {% vite_asset 'index.html' %}
+</head>
+<body>
+  <div id="root"></div>
+</body>
+</html>

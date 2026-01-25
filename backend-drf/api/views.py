@@ -8,14 +8,20 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime
-import os
+import io, base64
 from django.conf import settings
-from .utils import save_plot
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import load_model
 from sklearn.metrics import mean_squared_error, r2_score
 
 class StockPredictionAPIView(APIView):
+    def _plot_to_base64(self, fig):
+        buf = io.BytesIO()
+        fig.savefig(buf, format="png", bbox_inches="tight")
+        plt.close(fig)
+        buf.seek(0)
+        return base64.b64encode(buf.read()).decode("utf-8")
+
     def post(self, request):
         serializer = StockPredictionSerializer(data=request.data)
         if serializer.is_valid():
@@ -34,22 +40,19 @@ class StockPredictionAPIView(APIView):
 
             # Generate Basic Plot
             plt.switch_backend('Agg')  # Use a non-interactive backend
-            plt.figure(figsize=(14,7))
+            fig1 = plt.figure(figsize=(14,7))
             plt.plot(df['Close'], label='Close Price')
             plt.title(F'{ticker.upper()} Stock Price Over the Last 10 Years (Trading Days)')
             plt.xlabel('Days')
             plt.ylabel('Price (USD)')        
             plt.xticks(list(range(0, len(df), 200)) + [len(df)-1])
             plt.legend()
-            plt.show()
-            # Save plot to a file
-            plot_filename = f'{ticker.upper()}_plot.png'
-            plot_img = save_plot(plot_filename)
+            plot_img = self._plot_to_base64(fig1)
 
             # 100 days moving average
             ma100 = df['Close'].rolling(100).mean()
             plt.switch_backend('Agg')  # Use a non-interactive backend
-            plt.figure(figsize=(14,7))
+            fig2 = plt.figure(figsize=(14,7))
             plt.plot(df['Close'], label='Close Price')
             plt.plot(ma100, 'r', label='100-Day Moving Average')
             plt.title(F'100-Day Moving Average {ticker.upper()} Stock Price Over the Last 10 Years (Trading Days)')
@@ -57,15 +60,12 @@ class StockPredictionAPIView(APIView):
             plt.ylabel('Price (USD)')
             plt.xticks(list(range(0, len(df), 200)) + [len(df)-1])
             plt.legend()
-            plt.show()
-            # Save plot to a file
-            plot_filename_100_dma = f'{ticker.upper()}_100_dma.png'
-            plot_100_dma = save_plot(plot_filename_100_dma)
+            plot_100_dma = self._plot_to_base64(fig2)
 
             # 200 days moving average
             ma200 = df['Close'].rolling(200).mean()
             plt.switch_backend('Agg')  # Use a non-interactive backend
-            plt.figure(figsize=(14,7))
+            fig2 = plt.figure(figsize=(14,7))
             plt.plot(df['Close'], label='Close Price')
             plt.plot(ma100, 'r', label='100-Day Moving Average')
             plt.plot(ma200, 'g', label='200-Day Moving Average')
@@ -74,10 +74,7 @@ class StockPredictionAPIView(APIView):
             plt.ylabel('Price (USD)')
             plt.xticks(list(range(0, len(df), 200)) + [len(df)-1])
             plt.legend()
-            plt.show()
-            # Save plot to a file
-            plot_filename_200_dma = f'{ticker.upper()}_200_dma.png'
-            plot_200_dma = save_plot(plot_filename_200_dma)
+            plot_200_dma = self._plot_to_base64(fig2)
 
             # Splitting data into training and testing sets
             data_training = pd.DataFrame(df['Close'][0:int(len(df)*0.70)])
@@ -114,7 +111,7 @@ class StockPredictionAPIView(APIView):
 
             # Plot the final prediction
             plt.switch_backend('Agg')  # Use a non-interactive backend
-            plt.figure(figsize=(14,7))
+            fig3 = plt.figure(figsize=(14,7))
             plt.plot(y_test, 'b', label='Original Close Price')
             plt.plot(y_predicted, 'r', label='Predicted Close Price')
             plt.title(F'Predicted vs Original {ticker.upper()} Stock Price Prediction – Test Set Performance (Last 30% of Data)')
@@ -128,11 +125,8 @@ class StockPredictionAPIView(APIView):
             plt.xticks(ticks_pos, ticks_labels)
 
             plt.legend()
-            plt.show()
-            # Save plot to a file
-            plot_filename_pred_vs_orig = f'{ticker.upper()}_pred_vs_orig.png'
-            plot_pred_vs_orig = save_plot(plot_filename_pred_vs_orig)
-
+            plot_pred_vs_orig = self._plot_to_base64(fig3)
+            
             # Modal evaluation
             # Mean Squared Error (MSE)
             mse = mean_squared_error(y_test, y_predicted)
