@@ -11,8 +11,16 @@ from datetime import datetime
 import io, base64
 from django.conf import settings
 from sklearn.preprocessing import MinMaxScaler
-from keras.models import load_model
 from sklearn.metrics import mean_squared_error, r2_score
+
+MODEL = None
+
+def get_model():
+    global MODEL
+    if MODEL is None:
+        from keras.models import load_model
+        MODEL = load_model("stock_prediction_model.keras")
+    return MODEL
 
 class StockPredictionAPIView(APIView):
     def _plot_to_base64(self, fig):
@@ -85,7 +93,7 @@ class StockPredictionAPIView(APIView):
             data_training_array = scaler.fit_transform(data_training)
 
             # Load the pre-trained model
-            model = load_model('stock_prediction_model.keras')
+            model = get_model()
 
             # Preparing testing data
             past_100_days = data_training.tail(100)
