@@ -41,11 +41,11 @@ const Dashboard = () => {
 			setSuccess(`Success get the data for ticker ${stockTicker.toUpperCase()}`)
 
 			// Set the plot URL from the response
-			const backendRoot = import.meta.env.VITE_BACKEND_ROOT
-			const plotUrl = backendRoot + response.data.plot_image 
-			const ma100PlotUrl = backendRoot + response.data.plot_100_dma
-			const ma200PlotUrl = backendRoot + response.data.plot_200_dma
-			const predVsOrigPlotUrl = backendRoot + response.data.plot_pred_vs_orig
+			const plotUrl = `data:image/png;base64,${response.data.plot_image}`
+			const ma100PlotUrl = `data:image/png;base64,${response.data.plot_100_dma}`
+			const ma200PlotUrl = `data:image/png;base64,${response.data.plot_200_dma}`
+			const predVsOrigPlotUrl = `data:image/png;base64,${response.data.plot_pred_vs_orig}`
+
 			setPlot(plotUrl)
 			setMa100Plot(ma100PlotUrl)
 			setMa200Plot(ma200PlotUrl)
@@ -71,7 +71,7 @@ const Dashboard = () => {
 			<div className="row">
 				<div className="col-md-6 mx-auto">
 					<form onSubmit={handleSubmit}>
-						<input type="text" className='form-control mb-2' placeholder='Enter Stock Ticker' onChange={(e) => setStockTicker(e.target.value)} required />
+						<input type="text" className='form-control mb-2' placeholder="Enter Stock Ticker (e.g., AAPL, TSLA)" onChange={(e) => setStockTicker(e.target.value)} required />
 						<small>
 							{error && <div className="text-danger">{error}</div>}
 							{success && <div className="text-info">{success}</div>}

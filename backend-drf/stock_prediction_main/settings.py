@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'api',
     'corsheaders',
     'rest_framework_simplejwt',
+    'django_vite',
 ]
 
 MIDDLEWARE = [
@@ -132,6 +133,12 @@ STATICFILES_DIRS = [
     BASE_DIR.parent / 'frontend-react' / 'dist',
 ]
 
+DJANGO_VITE = {
+    "default": {
+        "manifest_path": BASE_DIR.parent / 'frontend-react' / 'dist' / 'manifest.json',
+    }
+}
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -156,4 +163,3 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
-
