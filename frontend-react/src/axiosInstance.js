@@ -1,8 +1,16 @@
 import axios from "axios";
 
-const baseURL = import.meta.env.VITE_BACKEND_BASE_API;
+// 1. Log to see exactly what Render "baked in"
+console.log("Environment Check:", import.meta.env);
 
-if (!baseURL) {
+// 2. Use a fallback. 
+// If the env var is missing, it assumes the API is on the same domain.
+const envBaseURL = import.meta.env.VITE_BACKEND_BASE_API || "/api/v1";
+
+// 3. Safety Check: Ensure we don't have a double slash if the user adds one
+const baseURL = envBaseURL.endsWith('/') ? envBaseURL.slice(0, -1) : envBaseURL;
+
+if (baseURL) {
   	console.error("Missing backend API URL. Please configure your environment.");
 	alert("Configuration error: API URL missing.");
 }

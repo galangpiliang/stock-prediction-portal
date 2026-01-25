@@ -4,7 +4,12 @@ set -o errexit
 echo "Building React frontend..."
 cd frontend-react
 npm install
-npm run build
+
+# DEBUG: This will show up in your Render build logs
+echo "Injecting API URL: $VITE_BACKEND_BASE_API"
+
+# Explicitly pass the env var into the build command
+VITE_BACKEND_BASE_API=$VITE_BACKEND_BASE_API npm run build
 cd ..
 
 echo "Preparing frontend static files..."
@@ -22,3 +27,13 @@ python manage.py collectstatic --noinput --clear
 echo "Running migrations..."
 python manage.py migrate
 echo "Build process completed successfully."
+
+# Set the variable locally
+export VITE_BACKEND_BASE_API="https://test-link.com"
+
+# Build only the frontend
+cd frontend-react
+npm run build
+
+# Search the build files for that link
+grep -r "https://test-link.com" dist/
