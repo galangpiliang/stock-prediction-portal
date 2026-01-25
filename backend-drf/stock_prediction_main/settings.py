@@ -151,11 +151,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
+    CORS_ALLOWED_ORIGINS = []
 else:
-    CORS_ALLOWED_ORIGINS = config(
-        "CORS_ALLOWED_ORIGINS",
-        default=""
-    ).split(",")
+    CORS_ALLOWED_ORIGINS = [
+        origin.strip()
+        for origin in config(
+            "CORS_ALLOWED_ORIGINS",
+            default="https://stock-prediction-portal-9ja1.onrender.com",
+        ).split(",")
+        if origin.strip()
+    ]
 
 CORS_ALLOW_CREDENTIALS = True
 
