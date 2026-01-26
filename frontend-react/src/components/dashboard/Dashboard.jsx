@@ -41,11 +41,11 @@ const Dashboard = () => {
 			setSuccess(`Success get the data for ticker ${stockTicker.toUpperCase()}`)
 
 			// Set the plot URL from the response
-			const backendRoot = import.meta.env.VITE_BACKEND_ROOT
-			const plotUrl = backendRoot + response.data.plot_image 
-			const ma100PlotUrl = backendRoot + response.data.plot_100_dma
-			const ma200PlotUrl = backendRoot + response.data.plot_200_dma
-			const predVsOrigPlotUrl = backendRoot + response.data.plot_pred_vs_orig
+			const plotUrl = `data:image/png;base64,${response.data.plot_image}`
+			const ma100PlotUrl = `data:image/png;base64,${response.data.plot_100_dma}`
+			const ma200PlotUrl = `data:image/png;base64,${response.data.plot_200_dma}`
+			const predVsOrigPlotUrl = `data:image/png;base64,${response.data.plot_pred_vs_orig}`
+
 			setPlot(plotUrl)
 			setMa100Plot(ma100PlotUrl)
 			setMa200Plot(ma200PlotUrl)
@@ -67,39 +67,45 @@ const Dashboard = () => {
 	}
 
 	return (
-		<div className="container">
+		<div className="container p-3">
 			<div className="row">
 				<div className="col-md-6 mx-auto">
 					<form onSubmit={handleSubmit}>
-						<input type="text" className='form-control mb-2' placeholder='Enter Stock Ticker' onChange={(e) => setStockTicker(e.target.value)} required />
+						<input type="text" className='form-control mb-2' placeholder="Enter Stock Ticker (e.g., AAPL, TSLA)" onChange={(e) => setStockTicker(e.target.value)} required />
 						<small>
 							{error && <div className="text-danger">{error}</div>}
 							{success && <div className="text-info">{success}</div>}
 						</small>
-							<button type='submit' className="btn btn-info mt-3">
-								{
-									loading ? (
-										<span><FontAwesomeIcon icon={faSpinner} spin /> Getting Prediction...</span>
-									) : (
-										"See Prediction"
-									)
-								}
-							</button>
+						<button type='submit' className="btn btn-info mt-3">
+							{
+								loading ? (
+									<span><FontAwesomeIcon icon={faSpinner} spin /> Getting Prediction...</span>
+								) : (
+									"See Prediction"
+								)
+							}
+						</button>
+						{loading && (
+							<div className="mt-2 text-warning">
+								This website runs on free hosting with limited resources.
+								Stock prediction may take up to 2 minutes. Thank you for your patience!
+							</div>
+						)}
 					</form>
 				</div>
 				{/* Display the plot image if available */}
 				{plot && (
 					<div className="mt-4">
-						<div className="p-5">
+						<div className="p-3">
 							<img src={plot} alt={`Stock plot for ${stockTicker.toUpperCase()}`} className="img-fluid" />
 						</div>
-						<div className="p-5">
+						<div className="p-3">
 							<img src={ma100Plot} alt={`100-day moving average plot for ${stockTicker.toUpperCase()}`} className="img-fluid" />
 						</div>
-						<div className="p-5">
+						<div className="p-3">
 							<img src={ma200Plot} alt={`200-day moving average plot for ${stockTicker.toUpperCase()}`} className="img-fluid" />
 						</div>
-						<div className="p-5">
+						<div className="p-3">
 							<img src={predVsOrigPlot} alt={`Prediction vs Original plot for ${stockTicker.toUpperCase()}`} className="img-fluid" />
 						</div>
 						<div className="text-light p-3">
