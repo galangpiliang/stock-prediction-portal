@@ -42,7 +42,7 @@ class StockPredictionAPIView(APIView):
             df.columns = df.columns.get_level_values(0)
 
             if df.empty:
-                return Response({"error": "Invalid ticker or no data found."}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error": f"No data found for {ticker.upper()}. You might be rate-limited or the ticker is invalid. Please try again."}, status=status.HTTP_400_BAD_REQUEST)
             
             df = df.reset_index()
 

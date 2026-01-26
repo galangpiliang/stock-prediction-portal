@@ -67,7 +67,7 @@ const Dashboard = () => {
 	}
 
 	return (
-		<div className="container">
+		<div className="container p-3">
 			<div className="row">
 				<div className="col-md-6 mx-auto">
 					<form onSubmit={handleSubmit}>
@@ -96,16 +96,16 @@ const Dashboard = () => {
 				{/* Display the plot image if available */}
 				{plot && (
 					<div className="mt-4">
-						<div className="p-5">
+						<div className="p-3">
 							<img src={plot} alt={`Stock plot for ${stockTicker.toUpperCase()}`} className="img-fluid" />
 						</div>
-						<div className="p-5">
+						<div className="p-3">
 							<img src={ma100Plot} alt={`100-day moving average plot for ${stockTicker.toUpperCase()}`} className="img-fluid" />
 						</div>
-						<div className="p-5">
+						<div className="p-3">
 							<img src={ma200Plot} alt={`200-day moving average plot for ${stockTicker.toUpperCase()}`} className="img-fluid" />
 						</div>
-						<div className="p-5">
+						<div className="p-3">
 							<img src={predVsOrigPlot} alt={`Prediction vs Original plot for ${stockTicker.toUpperCase()}`} className="img-fluid" />
 						</div>
 						<div className="text-light p-3">

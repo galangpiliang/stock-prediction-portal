@@ -13,4 +13,6 @@ body{
 
 .container{
     flex: 1;
+    gap: 16px;
+    align-content: baseline;
 }
